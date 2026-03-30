@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>El Ahorcado | Juego Venezolano</title>
+    <title>El Ahorcado | modo ush</title>
     <style>
         * {
             margin: 0;
@@ -322,9 +322,9 @@
 <body>
 <div class="game-container">
     <div class="game-header">
-        <h1>⚡ EL AHORCADO ⚡</h1>
+        <h1>⚡ EL Guayurneado ⚡</h1>
         <div class="venezuela-badge">
-            <span>🇻🇪</span> Tradición venezolana · Palabras criollas
+            <span>🇻🇪</span> para que te diviertas con amigos
         </div>
         <div style="margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center;">
             <span style="font-size:0.9rem; background:rgba(0,0,0,0.3); padding:4px 10px; border-radius:8px;">Usuario: <strong><%= user %></strong></span>
@@ -333,7 +333,7 @@
     </div>
 
     <div class="multiplayer-panel" style="margin-bottom:18px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.16); border-radius:1.2rem; padding:14px;">
-        <h3 style="font-size:1.1rem; text-align:center; margin:0 0 10px;">🎮 Modo 2-jugadores</h3>
+        <h3 style="font-size:1.1rem; text-align:center; margin:0 0 10px;"> Modo 2-jugadores</h3>
         <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:8px;">
             <span style="color:#f1f1f1; font-size:0.9rem;">Tu código: <strong><%= userCode || '---' %></strong></span>
             <input id="friendCodeInput" placeholder="Código de tu amigo" style="padding:5px 8px; border-radius:6px; border:none; min-width:150px;" type="text" maxlength="6">
@@ -380,7 +380,7 @@
     </div>
 
     <div class="message" id="gameMessage">✨ ¡Adivina la palabra! Elige una letra ✨</div>
-    <footer>🎯 Hecho con 💙 en Venezuela · Usa teclado físico o botones</footer>
+    <footer>realizado por Dieguito · Usa teclado físico o botones para manejar</footer>
 </div>
 
 <script id="serverRoomData" type="application/json"><%- JSON.stringify(roomData || null) %></script>
@@ -1065,7 +1065,7 @@
                 updateKeyboardState();
                 disableKeyboard(false);
                 attemptsLeftSpan.textContent = MAX_WRONG;
-                gameMessageDiv.innerHTML = "🎉 Juego del Ahorcado - versión venezolana. ¡Suerte! 🎉";
+                gameMessageDiv.innerHTML = " Juego del Ahorcado - versión mosoUSH. ¡Suerte! ";
             }
 
             window.addEventListener("keydown", handleKeyPress);
