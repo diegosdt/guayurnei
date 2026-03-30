@@ -786,6 +786,7 @@
             } else {
                 twoPlayerStage = 'setup';
                 startRoomPolling();
+                pollRoomState();
             }
         }
 
@@ -843,6 +844,9 @@
             twoHintInput.value = '';
             updateTwoPlayerStatus(`${guesser} está adivinando. ${setter} espera.`);
             nextRoleSwap = true;
+
+            // refresco inmediato para que el adivinador reciba el cambio sin recargar.
+            pollRoomState();
         }
 
         function changeTwoPlayerRoles() {
@@ -910,7 +914,7 @@
 
         function startRoomPolling() {
             if (roomPollInterval) return;
-            roomPollInterval = setInterval(pollRoomState, 1200);
+            roomPollInterval = setInterval(pollRoomState, 700);
         }
 
         function stopRoomPolling() {
