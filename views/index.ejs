@@ -67,6 +67,24 @@
             padding: 0 10px;
         }
 
+        .highlight-turn {
+            animation: pulseTurn 1.2s ease-in-out 3;
+        }
+
+        .flash-message {
+            animation: flashMessage 0.8s ease-in-out 4;
+        }
+
+        @keyframes pulseTurn {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 235, 59, 0.45); }
+            50% { box-shadow: 0 0 20px 10px rgba(255, 235, 59, 0.55); }
+        }
+
+        @keyframes flashMessage {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         .venezuela-badge {
             display: inline-flex;
             align-items: center;
@@ -707,7 +725,13 @@
                 enableTwoPlayerControls(setter === '<%= user %>');
 
                 if (setter === '<%= user %>') {
-                    gameMessageDiv.innerHTML = '✍️ Te toca poner palabra y pista para que tu amigo adivine.';
+                    gameMessageDiv.innerHTML = '✍️ Es tu turno: pon palabra y pista para que tu amigo adivine.';
+                    gameMessageDiv.classList.add('highlight-turn');
+                    twoPlayerArea.classList.add('highlight-turn');
+                    setTimeout(() => {
+                        gameMessageDiv.classList.remove('highlight-turn');
+                        twoPlayerArea.classList.remove('highlight-turn');
+                    }, 2200);
                 } else {
                     gameMessageDiv.innerHTML = `⌛ Espera que ${setter} defina la palabra y pista.`;
                 }
@@ -726,7 +750,9 @@
                 enableTwoPlayerControls(false);
 
                 if (guesser === '<%= user %>') {
-                    gameMessageDiv.innerHTML = `🎯 Tu turno de adivinar. Pista: ${currentHint}`;
+                    gameMessageDiv.innerHTML = `🎯 Es tu turno de adivinar. Pista: ${currentHint}`;
+                    gameMessageDiv.classList.add('flash-message');
+                    setTimeout(() => gameMessageDiv.classList.remove('flash-message'), 2200);
                     disableKeyboard(false);
                 } else {
                     const total = currentWord.length;
@@ -866,6 +892,14 @@
             enableTwoPlayerControls(true);
             updateTwoPlayerStatus(`Turno de ${setter} para asignar palabra y pista.`);
             gameMessageDiv.innerHTML = `➡️ ${setter} escoge palabra y pista para ${guesser}.`;
+            if (setter === '<%= user %>') {
+                gameMessageDiv.classList.add('highlight-turn');
+                twoPlayerArea.classList.add('highlight-turn');
+                setTimeout(() => {
+                    gameMessageDiv.classList.remove('highlight-turn');
+                    twoPlayerArea.classList.remove('highlight-turn');
+                }, 2200);
+            }
         }
 
         async function handleRoundEnd(resultText) {
