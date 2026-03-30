@@ -292,6 +292,12 @@
             color: #FFE0A3;
         }
 
+        @keyframes popupBounce {
+            0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+            60%  { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
         footer {
             text-align: center;
             margin-top: 20px;
@@ -567,6 +573,72 @@
             const remaining = MAX_WRONG - wrongGuesses;
             attemptsLeftSpan.textContent = remaining;
         }
+
+        function createConfettiElement() {
+            const el = document.createElement('div');
+            const size = 8 + Math.random() * 10;
+            el.style.position = 'fixed';
+            el.style.pointerEvents = 'none';
+            el.style.width = `${size}px`;
+            el.style.height = `${size}px`;
+            el.style.background = `hsl(${Math.floor(Math.random()*360)}, 80%, ${55 + Math.random()*20}%)`;
+            el.style.left = `${Math.random() * 100}vw`;
+            el.style.top = `${-20 - Math.random() * 40}px`;
+            el.style.opacity = `0.8`;
+            el.style.transform = `rotate(${Math.random()*360}deg)`;
+            el.style.borderRadius = `${Math.random() > 0.5 ? '3px' : '50%'}`;
+            el.style.zIndex = 9999;
+            el.style.willChange = 'transform, opacity';
+            el.style.transition = 'transform 4s ease-out, top 4s ease-in, opacity 0.8s ease';
+            return el;
+        }
+
+        function showConfetti() {
+            const total = 240;
+            const confetti = [];
+
+            const message = document.createElement('div');
+            message.id = 'popupConfettiMessage';
+            message.textContent = '🎉 ¡GANASTE! 🎉';
+            message.style.position = 'fixed';
+            message.style.top = '30%';
+            message.style.left = '50%';
+            message.style.transform = 'translate(-50%, -50%)';
+            message.style.zIndex = 10000;
+            message.style.padding = '14px 24px';
+            message.style.background = 'rgba(0,0,0,0.65)';
+            message.style.border = '2px solid #ffdd57';
+            message.style.borderRadius = '18px';
+            message.style.color = '#fff';
+            message.style.fontSize = '2rem';
+            message.style.fontWeight = '800';
+            message.style.textShadow = '0 0 12px rgba(255,255,255,0.85)';
+            message.style.fontFamily = 'Segoe UI, Arial, sans-serif';
+            message.style.animation = 'popupBounce 1s ease forwards';
+            document.body.appendChild(message);
+
+            for (let i = 0; i < total; i++) {
+                const piece = createConfettiElement();
+                document.body.appendChild(piece);
+                confetti.push(piece);
+
+                setTimeout(() => {
+                    const flyX = (Math.random() - 0.5) * 180;
+                    const $top = 110 + Math.random() * 35;
+                    piece.style.top = `${$top}vh`;
+                    piece.style.left = `calc(${piece.style.left} + ${flyX}px)`;
+                    piece.style.transform = `translateX(${flyX}px) rotate(${Math.random() * 1080}deg)`;
+                    piece.style.opacity = '0';
+                }, 30 + Math.random() * 150);
+            }
+
+            setTimeout(() => {
+                confetti.forEach(piece => {
+                    if (piece && piece.parentNode) document.body.removeChild(piece);
+                });
+                if (message && message.parentNode) document.body.removeChild(message);
+            }, 4500);
+        }
         
         // -------- VERIFICAR VICTORIA / DERROTA ----------
         function checkWin() {
@@ -577,6 +649,7 @@
                 gameMessageDiv.style.background = "#2c6e2ccc";
                 gameMessageDiv.style.color = "#FFEFBF";
                 disableKeyboard(true);
+                showConfetti();
                 if (twoPlayerMode) {
                     handleRoundEnd(`🎉 ${guesser} gana la ronda.`);
                 }
@@ -882,9 +955,12 @@
                     if (data.gameOver) {
                         if (data.win) {
                             gameMessageDiv.innerHTML = '🎉 ¡Ganaste! Ahora eres setter y debes ingresar nueva palabra y pista.';
+                            showConfetti();
                         } else {
-                            gameMessageDiv.innerHTML = `💀 ${room.guesser} no logró adivinar. Ahora cambiarás a setter.`;
+                            const lostWord = data.revealedWord || currentWord || '---';
+                            gameMessageDiv.innerHTML = `💀 ${room.guesser} no logró adivinar. La palabra era <strong>${lostWord}</strong>. Ahora cambiarás a setter.`;
                         }
+                        disableKeyboard(true);
                         return;
                     }
 

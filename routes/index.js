@@ -117,9 +117,18 @@ router.post('/room/guess', function(req, res) {
   let resultMessage = '';
 
   if (hasWon || hasLost) {
+    const revealedWord = room.currentWord;
     const wrapped = roomModel.swapRoles(room);
-    resultMessage = hasWon ? '¡Ganaste! Ahora cambias a setter.' : `Fallaste y perdiste. La palabra era ${room.currentWord}. Ahora cambias a setter.`;
-    return res.json({ message: resultMessage, room: wrapped, gameOver: true, win: hasWon });
+    resultMessage = hasWon
+      ? '¡Ganaste! Ahora cambias a setter.'
+      : `Fallaste y perdiste. La palabra era ${revealedWord}. Ahora cambias a setter.`;
+    return res.json({
+      message: resultMessage,
+      room: wrapped,
+      gameOver: true,
+      win: hasWon,
+      revealedWord,
+    });
   }
 
   res.json({ message: 'Letra guardada', room, gameOver: false });
